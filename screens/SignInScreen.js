@@ -10,16 +10,36 @@ import {
   Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+
+const API = "https://yjsoon.pythonanywhere.com";
+const API_LOGIN = "/auth";
 
 export default function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorText, setErrorText] = useState("");
 
-  function login() {
+  async function login() {
+    console.log("---- Login time ----");
     Keyboard.dismiss();
-    AsyncStorage.setItem("token", "demo_token");
-    navigation.navigate("Account");
+
+    try {
+      const response = await axios.post(API + API_LOGIN, {
+        username,
+        password,
+      });
+      console.log("Success logging in!");
+      console.log(response);
+
+      AsyncStorage.setItem("token", response.data.access_token);
+      navigation.navigate("Account");
+    } catch (error) {
+      console.log("Error logging in!");
+      console.log(error.response);
+
+      setErrorText(error.response.data.description);
+    }
   }
 
   return (
