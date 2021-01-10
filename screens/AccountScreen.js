@@ -11,24 +11,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUsername } from "../hooks/useAPI";
 
 export default function AccountScreen({ navigation }) {
-  const [username, setUsername] = useState("");
-  const getUsernameFromAPI = useUsername(signOut);
+  const [username, loading, error, refresh] = useUsername();
 
-  async function getUsername() {
-    const nameFromAPI = await getUsernameFromAPI();
-    setUsername(nameFromAPI);
-  }
+  // signs out if the useUsername hook returns error as true
+  useEffect(() => {
+    if (error) {
+      signOut();
+    }
+  }, [error]);
 
   useEffect(() => {
-    console.log("Setting up nav listener");
-    // Check for when we come back to this screen
     const removeListener = navigation.addListener("focus", () => {
-      console.log("Running nav listener");
-      setUsername(<ActivityIndicator />);
-      getUsername();
+      refresh(true);
     });
-    getUsername();
-
     return removeListener;
   }, []);
 
@@ -40,7 +35,7 @@ export default function AccountScreen({ navigation }) {
   return (
     <View style={commonStyles.container}>
       <Text>Account Screen</Text>
-      <Text>{username}</Text>
+      {loading ? <ActivityIndicator /> : <Text>{username}</Text>}
       <Button title="Sign out" onPress={signOut} />
     </View>
   );
