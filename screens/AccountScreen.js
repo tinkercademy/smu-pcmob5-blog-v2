@@ -19,6 +19,10 @@ export default function AccountScreen({ navigation }) {
   async function getUsername() {
     console.log("---- Getting user name ----");
     const token = await AsyncStorage.getItem("token");
+    if (token == null) {
+      signOut();
+      return;
+    }
     console.log(`Token is ${token}`);
     try {
       const response = await axios.get(API + API_WHOAMI, {

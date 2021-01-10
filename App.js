@@ -34,7 +34,7 @@ export default function App() {
       <Stack.Navigator
         mode="modal"
         headerMode="none"
-        initialRouteName={signedIn ? "Account" : "SignIn"}
+        initialRouteName="Account"
       >
         <Stack.Screen component={AccountScreen} name="Account" />
         <Stack.Screen component={SignInScreen} name="SignIn" />
