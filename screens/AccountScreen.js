@@ -19,7 +19,7 @@ export default function AccountScreen({ navigation }) {
         headers: { Authorization: `JWT ${token}` },
       });
       console.log("Got user name!");
-      console.log(response);
+      setUsername(response.data.username);
     } catch (error) {
       console.log("Error getting user name");
       if (error.response) {
