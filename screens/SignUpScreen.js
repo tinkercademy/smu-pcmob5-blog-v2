@@ -16,12 +16,33 @@ import axios from "axios";
 
 const API = "https://yjsoon.pythonanywhere.com";
 const API_LOGIN = "/auth";
+const API_SIGNUP = "/newuser";
 
 export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorText, setErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+
+  async function signup() {
+    console.log("---- Signing up ----");
+    Keyboard.dismiss();
+
+    try {
+      setLoading(true);
+      await axios.post(API + API_SIGNUP, {
+        username,
+        password,
+      });
+      console.log("Success signing up!");
+      login();
+    } catch (error) {
+      setLoading(false);
+      console.log("Error signing up!");
+      console.log(error.response);
+      setErrorText(error.response.data.description);
+    }
+  }
 
   async function login() {
     console.log("---- Login time ----");
@@ -69,7 +90,7 @@ export default function SignUpScreen({ navigation }) {
           onChangeText={(input) => setPassword(input)}
         />
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity onPress={login} style={styles.loginButton}>
+          <TouchableOpacity onPress={signup} style={styles.loginButton}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
           {loading ? (
