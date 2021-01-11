@@ -19,7 +19,7 @@ export default function SignInSignUpView({ navigation, isSignIn }) {
     username,
     password,
     () => {
-      navigation.navigate("Account"); // function to be run on successful login
+      navigation.navigate("TabStack"); // function to be run on successful login
     }
   );
 
