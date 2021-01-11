@@ -75,6 +75,15 @@ export default function SignInScreen({ navigation }) {
             <ActivityIndicator style={{ marginLeft: 20, marginBottom: 20 }} /> // adjust
           ) : null}
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignUp");
+          }}
+          style={styles.switchButton}
+        >
+          <Text style={styles.switchText}>Register for a new account</Text>
+        </TouchableOpacity>
+
         <Text style={styles.errorText}>{errorText}</Text>
         <View style={{ height: 20, alignItems: "left" }}></View>
       </View>
@@ -118,6 +127,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
+  },
+  switchText: {
+    color: "blue",
   },
   errorText: {
     color: "red",
