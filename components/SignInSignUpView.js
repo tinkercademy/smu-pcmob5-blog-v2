@@ -11,15 +11,18 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useAuth } from "../hooks/useAPI.js";
+import { useDispatch } from "react-redux";
+import { signInAction } from "../redux/ducks/blogAuth";
 
 export default function SignInSignUpView({ navigation, isSignIn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   const [login, signup, loading, errorText] = useAuth(
     username,
     password,
     () => {
-      navigation.navigate("TabStack"); // function to be run on successful login
+      dispatch(signInAction()); // function to be run on successful login
     }
   );
 

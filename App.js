@@ -7,17 +7,29 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TabStack from "./components/TabStack";
+import { useSelector, useDispatch, Provider } from "react-redux";
+import { signInAction } from "./redux/ducks/blogAuth";
+import store from "./redux/createStore";
 
 const Stack = createStackNavigator();
 
-export default function App() {
+export default function AppWrapper() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
+
+function App() {
   const [loading, setLoading] = useState(true);
-  const [signedIn, setSignedIn] = useState(false);
+  const dispatch = useDispatch();
+  const signedIn = useSelector((state) => state.auth.signedIn);
 
   async function loadToken() {
     const token = await AsyncStorage.getItem("token");
     if (token) {
-      setSignedIn(true);
+      dispatch(signInAction());
     }
     setLoading(false);
   }
@@ -26,21 +38,28 @@ export default function App() {
     loadToken();
   }, []);
 
-  return loading ? (
-    <View style={styles.container}>
-      <ActivityIndicator />
-    </View>
-  ) : (
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  return (
     <NavigationContainer>
-      <Stack.Navigator
-        mode="modal"
-        headerMode="none"
-        screenOptions={{ animationEnabled: false }}
-      >
-        <Stack.Screen component={SignInScreen} name="SignIn" />
-        <Stack.Screen component={SignUpScreen} name="SignUp" />
-        <Stack.Screen component={TabStack} name="TabStack" />
-      </Stack.Navigator>
+      {signedIn ? (
+        <TabStack />
+      ) : (
+        <Stack.Navigator
+          mode="modal"
+          headerMode="none"
+          screenOptions={{ animationEnabled: false }}
+        >
+          <Stack.Screen component={SignInScreen} name="SignIn" />
+          <Stack.Screen component={SignUpScreen} name="SignUp" />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }

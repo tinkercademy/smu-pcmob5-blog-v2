@@ -14,6 +14,7 @@ const initialState = {
 };
 
 export default function blogAuthReducer(state = initialState, action) {
+  console.log(`Action is ${JSON.stringify(action)}`);
   switch (action.type) {
     case SIGN_IN:
       return { ...state, signedIn: true };
