@@ -10,12 +10,13 @@ import {
 import { commonStyles } from "../styles/commonStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUsername } from "../hooks/useAPI";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signOutAction } from "../redux/ducks/blogAuth";
+import { toggleDarkMode } from "../redux/ducks/accountPrefs";
 
 export default function AccountScreen({ navigation }) {
   const [username, loading, error, refresh] = useUsername();
-  const [isEnabled, setIsEnabled] = useState(false);
+  const isDarkModeOn = useSelector((state) => state.prefs.darkMode);
   const dispatch = useDispatch();
 
   // signs out if the useUsername hook returns error as true
@@ -49,10 +50,11 @@ export default function AccountScreen({ navigation }) {
       <View style={styles.horizontalBlock}>
         <Text>Dark mode</Text>
         <Switch
-          value={isEnabled}
-          onValueChange={() => setIsEnabled(!isEnabled)}
+          value={isDarkModeOn}
+          onValueChange={() => dispatch(toggleDarkMode())}
         />
       </View>
+      <Text> {isDarkModeOn ? "DARK MODE ON" : "DARK MODE OFF"}</Text>
       <Button title="Sign out" onPress={signOut} />
     </View>
   );
