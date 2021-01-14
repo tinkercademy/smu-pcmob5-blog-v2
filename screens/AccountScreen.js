@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Button,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -14,6 +15,7 @@ import { signOutAction } from "../redux/ducks/blogAuth";
 
 export default function AccountScreen({ navigation }) {
   const [username, loading, error, refresh] = useUsername();
+  const [isEnabled, setIsEnabled] = useState(false);
   const dispatch = useDispatch();
 
   // signs out if the useUsername hook returns error as true
@@ -38,11 +40,39 @@ export default function AccountScreen({ navigation }) {
 
   return (
     <View style={commonStyles.container}>
-      <Text>Account Screen</Text>
-      {loading ? <ActivityIndicator /> : <Text>{username}</Text>}
+      <Text style={styles.titleText}>Account Screen</Text>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.usernameText}>{username}</Text>
+      )}
+      <View style={styles.horizontalBlock}>
+        <Text>Dark mode</Text>
+        <Switch
+          value={isEnabled}
+          onValueChange={() => setIsEnabled(!isEnabled)}
+        />
+      </View>
       <Button title="Sign out" onPress={signOut} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
+  },
+  usernameText: {
+    fontSize: 18,
+    color: "grey",
+    marginBottom: 12,
+  },
+  horizontalBlock: {
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "40%",
+    flexDirection: "row",
+  },
+});
